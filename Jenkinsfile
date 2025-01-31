@@ -27,6 +27,7 @@ pipeline {
                 script {
                     echo "Building Docker images..."
                     sh "docker-compose build"
+                    sh "docker images"
                 }
             }
         }
@@ -36,9 +37,9 @@ pipeline {
                 script {
                     echo "Tagging Docker images..."
                     sh """
-                        docker tag ${VOTE_SERVICE}:latest ${VOTE_SERVICE}:${APP_VERSION}
-                        docker tag ${RESULT_SERVICE}:latest ${RESULT_SERVICE}:${APP_VERSION}
-                        docker tag ${WORKER_SERVICE}:latest ${WORKER_SERVICE}:${APP_VERSION}
+                        docker tag oulimatou/voting-app-vote:latest ${VOTE_SERVICE}:${APP_VERSION}
+                	docker tag oulimatou/voting-app-result:latest ${RESULT_SERVICE}:${APP_VERSION}
+                	docker tag oulimatou/voting-app-worker:latest ${WORKER_SERVICE}:${APP_VERSION}
                     """
                 }
             }
