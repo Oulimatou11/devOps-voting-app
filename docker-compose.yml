@@ -1,0 +1,61 @@
+services:
+  vote:
+    build:
+      context: ./vote
+      image: oulimatou/voting-app-vote:${APP_VERSION}
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "5000:80"
+    environment:
+      - REDIS_HOST=redis
+
+  result:
+    build:
+      context: ./result
+      image: oulimatou/voting-app-result:${APP_VERSION}
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "5001:80"
+    environment:
+      - DB_HOST=db
+
+  worker:
+    build:
+      context: ./worker
+      image: oulimatou/voting-app-worker:${APP_VERSION}
+    networks:
+      - backend
+    environment:
+      - REDIS_HOST=redis
+      - DB_HOST=db
+
+  redis:
+    image: redis:alpine
+    networks:
+      - backend
+
+  db:
+    image: postgres:latest
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+volumes:
+  db-data:
+
+networks:
+  frontend:
+    name: frontend
+    driver: bridge
+  backend:
+    name: backend
+    driver: bridge
