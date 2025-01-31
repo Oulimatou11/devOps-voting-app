@@ -27,6 +27,11 @@ pipeline {
                 script {
                     echo "Building Docker images..."
                     sh "docker-compose build"
+                    sh """
+                        docker tag ${VOTE_SERVICE}:${APP_VERSION}
+                        docker tag ${RESULT_SERVICE}:${APP_VERSION}
+                        docker tag ${WORKER_SERVICE}:${APP_VERSION}
+                    """
                 }
             }
         }
@@ -43,18 +48,29 @@ pipeline {
                         docker push ${RESULT_SERVICE}:${APP_VERSION}
                         docker push ${WORKER_SERVICE}:${APP_VERSION}
                     """
+                    sh """
+                        docker rmi ${VOTE_SERVICE}:${APP_VERSION} ${RESULT_SERVICE}:${APP_VERSION} ${WORKER_SERVICE}:${APP_VERSION} || true
+                    """
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
+            	script {
                     echo "Updating docker-compose.yml with new image versions..."
-		    sh """
-			APP_VERSION=${APP_VERSION} docker-compose down || true
-			APP_VERSION=${APP_VERSION} docker-compose up -d
-		    """
+
+                    sh """
+                        sed -i 's|build:.*|image: ${VOTE_SERVICE}:${APP_VERSION}|' docker-compose.yml
+                        sed -i 's|build:.*|image: ${RESULT_SERVICE}:${APP_VERSION}|' docker-compose.yml
+                        sed -i 's|build:.*|image: ${WORKER_SERVICE}:${APP_VERSION}|' docker-compose.yml
+                    """
+
+                    echo "Stopping existing containers..."
+                    sh "docker-compose down || true"
+
+                    echo "Starting new containers..."
+                    sh "docker-compose up -d"
                 }
             }
         }
