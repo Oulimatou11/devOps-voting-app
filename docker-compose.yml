@@ -1,6 +1,8 @@
 services:
   vote:
-    image: oulimatou/voting-app-vote:latest
+    build:
+      context: ./vote
+      image: oulimatou/voting-app-vote:${APP_VERSION}
     networks:
       - frontend
       - backend
@@ -10,7 +12,9 @@ services:
       - REDIS_HOST=redis
 
   result:
-    image: oulimatou/voting-app-result:latest
+    build:
+      context: ./result
+      image: oulimatou/voting-app-result:${APP_VERSION}
     networks:
       - frontend
       - backend
@@ -20,7 +24,9 @@ services:
       - DB_HOST=db
 
   worker:
-    image: oulimatou/voting-app-worker:latest
+    build:
+      context: ./worker
+      image: oulimatou/voting-app-worker:${APP_VERSION}
     networks:
       - backend
     environment:

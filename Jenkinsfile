@@ -26,8 +26,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker images..."
-                    sh "docker-compose build"
-                    sh "docker images"
+                    sh "docker-compose build --build-arg APP_VERSION=${env.APP_VERSION}"
                 }
             }
         }
@@ -37,9 +36,9 @@ pipeline {
                 script {
                     echo "Tagging Docker images..."
                     sh """
-                        docker tag oulimatou/voting-app-vote:latest ${VOTE_SERVICE}:${APP_VERSION}
-                	docker tag oulimatou/voting-app-result:latest ${RESULT_SERVICE}:${APP_VERSION}
-                	docker tag oulimatou/voting-app-worker:latest ${WORKER_SERVICE}:${APP_VERSION}
+                        docker tag oulimatou/voting-app-vote:${env.APP_VERSION} oulimatou/voting-app-vote:latest
+                    	docker tag oulimatou/voting-app-result:${env.APP_VERSION} oulimatou/voting-app-result:latest
+                    	docker tag oulimatou/voting-app-worker:${env.APP_VERSION} oulimatou/voting-app-worker:latest
                     """
                 }
             }
