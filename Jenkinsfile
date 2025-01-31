@@ -36,10 +36,10 @@ pipeline {
                 script {
                     echo "Tagging Docker images..."
                     sh """
-                        docker tag voting-app-vote:latest ${VOTE_SERVICE}:${APP_VERSION}
-                        docker tag voting-app-result:latest ${RESULT_SERVICE}:${APP_VERSION}
-                        docker tag voting-app-worker:latest ${WORKER_SERVICE}:${APP_VERSION}
-                    """
+                	docker tag oulimatou/voting-app-vote:v1.${BUILD_NUMBER} ${VOTE_SERVICE}:${APP_VERSION}
+                	docker tag oulimatou/voting-app-result:v1.${BUILD_NUMBER} ${RESULT_SERVICE}:${APP_VERSION}
+                	docker tag oulimatou/voting-app-worker:v1.${BUILD_NUMBER} ${WORKER_SERVICE}:${APP_VERSION}
+            	    """
                 }
             }
         }
