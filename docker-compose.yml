@@ -2,7 +2,7 @@ services:
   vote:
     build:
       context: ./vote
-      image: oulimatou/voting-app-vote:${APP_VERSION}
+    image: oulimatou/voting-app-vote:${APP_VERSION}
     networks:
       - frontend
       - backend
@@ -14,7 +14,7 @@ services:
   result:
     build:
       context: ./result
-      image: oulimatou/voting-app-result:${APP_VERSION}
+    image: oulimatou/voting-app-result:${APP_VERSION}
     networks:
       - frontend
       - backend
@@ -26,7 +26,7 @@ services:
   worker:
     build:
       context: ./worker
-      image: oulimatou/voting-app-worker:${APP_VERSION}
+    image: oulimatou/voting-app-worker:${APP_VERSION}
     networks:
       - backend
     environment:
