@@ -27,6 +27,14 @@ pipeline {
                 script {
                     echo "Building Docker images..."
                     sh "docker-compose build"
+                }
+            }
+        }
+
+        stage('Tag Images') {
+            steps {
+                script {
+                    echo "Tagging Docker images..."
                     sh """
                         docker tag ${VOTE_SERVICE}:latest ${VOTE_SERVICE}:${APP_VERSION}
                         docker tag ${RESULT_SERVICE}:latest ${RESULT_SERVICE}:${APP_VERSION}
@@ -35,6 +43,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Push Images') {
             steps {
